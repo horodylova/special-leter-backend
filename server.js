@@ -1,50 +1,39 @@
 import express from 'express';
-import bodyParser from 'body-parser';
 import cors from 'cors';
-import { Pool } from 'pg';
+import pg from 'pg';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
-const port = 3000;
+const PORT = 3000;
 
-app.use(bodyParser.json());
 app.use(cors());
+app.use(express.json());
 
-const pool = new Pool({
-  user: 'kestra',
-  host: 'localhost',
-  database: 'kestra',
-  password: 'kestra',
-  port: 5432,
+ const pool = new pg.Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,  
+  },
 });
 
 
-app.post('/letters', async (req, res) => {
-  const { name, text, deliveryDate } = req.body;
+app.get('/api', (req, res) => {
+  res.status(200).send('Welcome to the Special Letter API!');
+});
 
+ 
+app.get('/api/test-db', async (req, res) => {
   try {
-    const { rows } = await pool.query(
-      'INSERT INTO letters (name, text, delivery_date, created_at) VALUES ($1, $2, $3, NOW()) RETURNING *',
-      [name, text, deliveryDate]
-    );
-    res.status(201).json(rows[0]);
+    const result = await pool.query('SELECT NOW()'); // Выполняем простой запрос
+    res.status(200).json({ message: 'Database connection successful!', time: result.rows[0] });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to save the letter' });
+    res.status(500).json({ message: 'Database connection failed!', error: error.message });
   }
 });
 
-
-app.get('/letters', async (req, res) => {
-  try {
-    const { rows } = await pool.query('SELECT * FROM letters ORDER BY delivery_date ASC');
-    res.status(200).json(rows);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to fetch letters' });
-  }
-});
-
-
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+ 
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
