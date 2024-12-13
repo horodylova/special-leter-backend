@@ -26,7 +26,7 @@ app.get('/api', (req, res) => {
  
 app.get('/api/test-db', async (req, res) => {
   try {
-    const result = await pool.query('SELECT NOW()'); // Выполняем простой запрос
+    const result = await pool.query('SELECT NOW()');  
     res.status(200).json({ message: 'Database connection successful!', time: result.rows[0] });
   } catch (error) {
     res.status(500).json({ message: 'Database connection failed!', error: error.message });
