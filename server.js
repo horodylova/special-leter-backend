@@ -1,23 +1,12 @@
 import express from 'express';
 import cors from 'cors';
-import pg from 'pg';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import pool from './db/connection.js'
 
 const app = express();
 const PORT = 3000;
 
 app.use(cors());
 app.use(express.json());
-
- const pool = new pg.Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,  
-  },
-});
-
 
 app.get('/api', (req, res) => {
   res.status(200).send('Welcome to the Special Letter API!');
