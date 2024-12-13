@@ -1,0 +1,15 @@
+13/12/24 
+What I Did:
+
+Set up a local PostgreSQL database using Docker.
+Created a seed.sql file for database structure and initial data.
+Wrote a seed.js script to execute SQL commands programmatically using Node.js and pg.
+Configured the API to connect to the local database through environment variables.
+Issues Faced:
+
+Connection Refused: The backend couldn't connect to the database due to timing issues during Docker startup.
+
+Fixed by adding depends_on in docker-compose.yml to ensure the database starts before the backend.
+SSL Error: The local PostgreSQL database didn’t support SSL connections, while the code was configured to use SSL.
+
+Resolved by disabling SSL for local connections in connection.js and using the NODE_ENV variable to toggle settings for production and development.
