@@ -1,0 +1,31 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:15
+    container_name: special_letter_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: special_letter
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: special_letter_backend
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/special_letter
+      NODE_ENV: development
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+    command: sh -c "node db/seeds/seed.js && npm run dev"
+
+volumes:
+  db_data:
+
