@@ -13,3 +13,19 @@ Fixed by adding depends_on in docker-compose.yml to ensure the database starts b
 SSL Error: The local PostgreSQL database didn’t support SSL connections, while the code was configured to use SSL.
 
 Resolved by disabling SSL for local connections in connection.js and using the NODE_ENV variable to toggle settings for production and development.
+
+16/12 
+Today, I:
+
+Set up PostgreSQL locally:
+
+Created roles and databases (special_letter and test_special_letter).
+Resolved connection issues by configuring the correct user and passwords.
+Configured my test environment:
+
+Set up a test database for Jest testing.
+Added scripts to reset and seed the test database before each test.
+Fixed Jest issues:
+
+Migrated back to CommonJS (require syntax).
+Ensured my tests run smoothly with proper database seeding and ordering.
