@@ -1,16 +1,56 @@
-import fs from 'fs/promises';
-import pool from '../connection.js';  
+const pool = require('../connection.js');
 
-(async () => {
-  try {
-     const seedSQL = await fs.readFile('./db/seeds/seed.sql', 'utf-8');
+const seed = async (data) => {
+  const { usersData, lettersData } = data;
 
-     await pool.query(seedSQL);
-    console.log('Database seeded successfully!');
-  } catch (err) {
-    console.error('Error seeding database:', err.message);
-  } finally {
-     
-    await pool.end();
-  }
-})();
+  await pool.query('DROP TABLE IF EXISTS letters;');
+  await pool.query('DROP TABLE IF EXISTS users;');
+
+  await pool.query(`
+    CREATE TABLE users (
+      id SERIAL PRIMARY KEY,
+      username VARCHAR(255) NOT NULL
+    );
+  `);
+
+  await pool.query(`
+    CREATE TABLE letters (
+      id SERIAL PRIMARY KEY,
+      user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      created_at TIMESTAMP DEFAULT NOW(),
+      opened_at TIMESTAMP,
+      letter_text TEXT NOT NULL
+    );
+  `);
+
+  await Promise.all(
+    usersData.map((user) =>
+      pool.query(`INSERT INTO users (id, username) VALUES ($1, $2);`, [
+        user.id,
+        user.username,
+      ])
+    )
+  );
+
+  await Promise.all(
+    lettersData.map((letter) =>
+      pool.query(
+        `INSERT INTO letters (id, user_id, created_at, opened_at, letter_text) VALUES ($1, $2, $3, $4, $5);`,
+        [
+          letter.id,
+          letter.user_id,
+          letter.created_at,
+          letter.opened_at,
+          letter.letter_text,
+        ]
+      )
+    )
+  );
+
+  console.log('Database seeded successfully!');
+};
+
+module.exports = seed;
+
+
+
