@@ -1,9 +1,9 @@
-import express from 'express';
-import cors from 'cors';
-import pool from './db/connection.js'
+const express = require('express');
+const cors = require('cors');
+const pool = require ('./db/connection.js');
 
 const app = express();
-const PORT = 3000;
+const PORT = 3001;
 
 app.use(cors());
 app.use(express.json());
