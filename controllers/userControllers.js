@@ -22,4 +22,16 @@ function getTheUser (request, response, next) {
     })
 }
 
-module.exports = {getUsers, getTheUser}
+function createUser (request, response, next) {
+    const {username} = request.params;
+    
+    postTheUserModel (username)
+    .then((user) => {
+        response.status(201).send({user})
+    })
+    .catch((error) => {
+        next(error)
+    })
+}
+
+module.exports = {getUsers, getTheUser, createUser}

@@ -18,4 +18,9 @@ function getTheUserModel(username) {
     })
 }
 
-module.exports = {getUsersModel, getTheUserModel}
+function postTheUserModel (username) {
+    return db
+    .query(``)
+}
+
+module.exports = {getUsersModel, getTheUserModel, postTheUserModel}

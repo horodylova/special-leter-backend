@@ -25,6 +25,11 @@ app.get('/api/test-db', async (req, res) => {
   }
 });
 
+app.use((err, req, res, next) => {
+  const { status = 500, message = "Server error" } = err;
+  res.status(status).json({ message });
+});
+
  
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
