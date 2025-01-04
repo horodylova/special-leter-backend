@@ -25,8 +25,6 @@ function getTheUser (request, response, next) {
 function createUser (request, response, next) {
     const {username} = request.params;
     
-    postTheUserModel (username)
-
     checkUserExists(username)
     .then((userExists) => {
         if(!userExists) {

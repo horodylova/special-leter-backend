@@ -29,3 +29,12 @@ Fixed Jest issues:
 
 Migrated back to CommonJS (require syntax).
 Ensured my tests run smoothly with proper database seeding and ordering.
+
+4/01/25
+
+I’ve created the logic for authorisation and authentication, but I’ve concluded that the user still needs a password. I will add it. I have also run tests to retrieve the user list. The next steps are:
+
+Create a function to check for an existing user during authorisation.
+Add a password to the authorisation logic.
+Write tests for creating a new user.
+Write simple error handlers.
