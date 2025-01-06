@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const HttpError = require("../helpers/HttpError")
  
 
 function getUsersModel() {
@@ -6,33 +7,42 @@ function getUsersModel() {
     .then((result) => {
         return result.rows;
     })
+    .catch(() => {
+        throw new HttpError(500, "Failed to fetch users");
+    });
 }
 
-function getTheUserModel(username) {
+function getUserModel(username) {
     return db
     .query(`SELECT users.username FROM users WHERE users.username=$1`, [username])
     .then(({rows}) => {
-        if(rows.length === 0) {
-            return Promise.reject({status:404, msg: "Not Found"})
+        if (rows.length === 0) {
+            throw new HttpError(404, "User not found");
         }
         return rows;
     })
+    .catch(() => {
+        throw new HttpError(500, "Database error while fetching user");
+    });
 }
 
-function postTheUserModel (username) {
+function postUserModel(username) {
     return db
     .query(`INSERT INTO users
         (username)
-        VALUES ($1, $2)
+        VALUES ($1)
         RETURNING *`,
     [username]
 )
-    .then((result)=> {
-        return result.rows[0]
+    .then((result) => {
+        return result.rows[0];
     })
-    .catch((error) => {
-        next(error)
-    })
+    .catch((err) => {
+        if (err.code === '23505') {   
+            throw new HttpError(409, "User already exists");
+        }
+        throw new HttpError(500, "Failed to create user");
+    });
 }
 
-module.exports = {getUsersModel, getTheUserModel, postTheUserModel}
+module.exports = {getUsersModel, getUserModel, postUserModel}

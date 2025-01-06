@@ -2,8 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const pool = require ('./db/connection.js');
 
-const userRouter = require ("./routes/userRoute.js")
-
+const authRouter = require("./routes/authRouter.js")
+ 
 const app = express();
 const PORT = 3001;
 
@@ -14,8 +14,8 @@ app.get('/api', (req, res) => {
   res.status(200).send('Welcome to the Special Letter API!');
 });
 
-app.use('/api/users', userRouter)
- 
+app.use('/api/auth', authRouter)
+  
 app.get('/api/test-db', async (req, res) => {
   try {
     const result = await pool.query('SELECT NOW()');  

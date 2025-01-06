@@ -37,10 +37,10 @@ describe('Database tests', () => {
 
 //tests for users 
 
-describe("GET /api/user", () => {
+describe("GET /api/auth", () => {
   test("returns 200 status with array of users", () => {
     return request (app)
-    .get("/api/users")
+    .get("/api/auth")
     .expect(200)
     .then(({body}) => {
       expect(body.users.length).toBeGreaterThan(0)
@@ -55,16 +55,30 @@ describe("GET /api/user", () => {
     })
   })
   test("returns 404 Not Found if user does not exist", () => {
+
+    const userSvitlana = {
+      username: "Svitlana",
+      password: "1111111"
+    };
+
     return request(app)
-    .get('/api/users/Svitlana')
+    .get('/api/auth/login')
+    .send(userSvitlana)
     .expect(404)
     .then(({body}) => {
       expect(body.msg).toBe("Not Found")
     })
   })
   test("returns 200 if the user exists", () => {
+    const userAlice = {
+      username: "Alice Johnson",
+      password: "1111111"
+    };
+
     return request(app)
-    .get('/api/users/Alice Johnson')
+
+    .get('/api/login')
+    .send(userAlice)
     .expect(200)
     .then(({body}) => {
     expect(body.user.length).toBe(1)

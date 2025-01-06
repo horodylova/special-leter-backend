@@ -1,44 +1,67 @@
-const {getUsersModel, getTheUserModel, postTheUserModel} = require('../models/userModels');
+const {getUsersModel, getUserModel, postUserModel} = require('../models/userModels');
 const checkUserExists = require("../models/utils/checkUserExists")
+const HttpError = require("../helpers/HttpError.js")
+const {signToken, checkToken} = require("../helpers/JWTHandling.js")
 
 function getUsers(request, response, next) {
     getUsersModel()
     .then((users) => {
-        response.status(200).send({users})
+        if (!users.length) {
+            throw HttpError(404, "No users found");
+        }
+        response.status(200).send({ users });
     })
     .catch((error) => {
-        next(error)
-    })
+        next(error);
+    });
 }
 
-function getTheUser (request, response, next) {
-    const {username} = request.params;
+function getUser (request, response, next) {
+    const {username, password} = request.params;
 
-    getTheUserModel(username)
+   
+    getUserModel(username, password)
     .then((user) => {
-        response.status(200).send({user})
+        if (!user) {
+            throw HttpError(404, "User not found");
+        }
+    const token = signToken(user.id);
+    response.status(200).send({ user, token });
     })
     .catch((error) => {
-        next(error)
-    })
+        next(error);
+    });
 }
 
 function createUser (request, response, next) {
-    const {username} = request.params;
+    const {username, password} = request.params;
     
-    checkUserExists(username)
+    checkUserExists(username, password)
     .then((userExists) => {
-        if(!userExists) {
-            return postTheUserModel(username)
+        if (!userExists) {
+            return postUserModel(username);
         }
-        return Promise.reject({status: 409, msg: "A user with the same name already exists"})
+        throw HttpError(409, "A user with the same name already exists");
     }) 
     .then((user) => {
-        response.status(201).send({user})
+        const token = signToken(user.id);
+        response.status(201).send({ user, token });
     })
     .catch((error) => {
-        next(error)
-    })
+        next(error);
+    });
 }
 
-module.exports = {getUsers, getTheUser, createUser}
+function logoutUser(request, response, next) {
+    const token = request.headers.authorization?.split(" ")[1];
+
+      try {
+        checkToken(token); 
+        response.status(200).send({ message: "User logged out successfully" });
+    } catch (err) {
+        next(HttpError(401, "Invalid or expired token"));
+    }
+
+}
+
+module.exports = {getUsers, getUser, createUser, logoutUser}
