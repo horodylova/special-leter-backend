@@ -20,7 +20,18 @@ function getTheUserModel(username) {
 
 function postTheUserModel (username) {
     return db
-    .query(``)
+    .query(`INSERT INTO users
+        (username)
+        VALUES ($1, $2)
+        RETURNING *`,
+    [username]
+)
+    .then((result)=> {
+        return result.rows[0]
+    })
+    .catch((error) => {
+        next(error)
+    })
 }
 
 module.exports = {getUsersModel, getTheUserModel, postTheUserModel}
