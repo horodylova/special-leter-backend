@@ -1,4 +1,5 @@
 const {getUsersModel, getTheUserModel, postTheUserModel} = require('../models/userModels');
+const checkUserExists = require("../models/utils/checkUserExists")
 
 function getUsers(request, response, next) {
     getUsersModel()

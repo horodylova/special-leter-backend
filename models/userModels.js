@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+ 
 
 function getUsersModel() {
     return db.query(`SELECT username FROM users`)
