@@ -5,7 +5,6 @@
   "main": "server.js",
   "scripts": {
     "test": "jest",
-    "start": "node server.js",
     "dev": "nodemon server.js",
     "seed": "node db/seeds/seed.js",
     "setup-dbs": "psql -U postgres -d postgres -f ./db/setup.sql"
