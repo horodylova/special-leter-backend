@@ -38,3 +38,8 @@ Create a function to check for an existing user during authorisation.
 Add a password to the authorisation logic.
 Write tests for creating a new user.
 Write simple error handlers.
+
+7/01/25 
+
+Yesterday and today, I updated database models to include password hashing, implemented secure user creation and login functionality with bcrypt, integrated JWT token generation for authentication, and refined error handling in controllers for better clarity and reliability.
+

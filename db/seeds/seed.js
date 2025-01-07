@@ -9,7 +9,8 @@ const seed = async (data) => {
   await pool.query(`
     CREATE TABLE users (
       id SERIAL PRIMARY KEY,
-      username VARCHAR(255) NOT NULL
+      username VARCHAR(255) NOT NULL,
+      password_hash VARCHAR(255) NOT NULL
     );
   `);
 
@@ -25,9 +26,10 @@ const seed = async (data) => {
 
   await Promise.all(
     usersData.map((user) =>
-      pool.query(`INSERT INTO users (id, username) VALUES ($1, $2);`, [
+      pool.query(`INSERT INTO users (id, username, password_hash) VALUES ($1, $2, $3);`, [
         user.id,
         user.username,
+        user.password_hash
       ])
     )
   );
