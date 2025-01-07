@@ -1,5 +1,6 @@
 const db = require("../db/connection");
-const HttpError = require("../helpers/HttpError")
+const HttpError = require("../helpers/HttpError");
+const checkUserExists = require("./utils/checkUserExists")
  
 
 function getUsersModel() {
@@ -26,22 +27,13 @@ function getUserModel(username) {
     });
 }
 
-function postUserModel(username) {
-    return db
-    .query(`INSERT INTO users
-        (username, password_hash)
-        VALUES ($1, $2)
-        RETURNING *`,
-    [username, password_hash]
-)
-    .then((result) => {
+function postUserModel(username, password_hash) {
+    return db.query(
+        `INSERT INTO users (username, password_hash) VALUES ($1, $2) RETURNING *`,
+        [username, password_hash]
+    ).then((result) => {
+        console.log("Inserted user:", result.rows[0]);
         return result.rows[0];
-    })
-    .catch((err) => {
-        if (err.code === '23505') {   
-            throw new HttpError(409, "User already exists");
-        }
-        throw new HttpError(500, "Failed to create user");
     });
 }
 

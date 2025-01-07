@@ -7,8 +7,9 @@ const {
 } = require("../models/userModels");
 const checkUserExists = require("../models/utils/checkUserExists");
 const HttpError = require("../helpers/HttpError.js");
+
 const { signToken, checkToken } = require("../helpers/JWTHandling.js");
-const hashPassword = require("../helpers/hashPasswords");
+const hashPassword = require("../helpers/hashPasswords.js");
 
 function getUsers(request, response, next) {
   getUsersModel()
@@ -24,7 +25,7 @@ function getUsers(request, response, next) {
 }
 
 function getUser(request, response, next) {
-  const { username, password } = request.params;
+  const { username, password } = request.body;
 
   getUserModel(username, password)
     .then((user) => {
@@ -45,17 +46,22 @@ function getUser(request, response, next) {
 }
 
 function createUser(request, response, next) {
-  const { username, password } = request.params;
+  const { username, password } = request.body;
 
-  checkUserExists(username, password)
-    .then((userExists) => {
-      if (!userExists) {
-        return hashPassword(password).then((hashPassword) => {
-          return postUserModel(username, hashPassword);
+  if (!password) {
+      throw new Error("Password is required");
+  }
+
+  checkUserExists(username)  
+  .then((userExists) => {
+    console.log("User exists?", userExists);  // Логируем результат проверки
+    if (!userExists) {
+        return hashPassword(password).then((hashedPassword) => {
+            return postUserModel(username, hashedPassword);
         });
-      }
-      throw HttpError(409, "A user with the same name already exists");
-    })
+    }
+    throw HttpError(409, "A user with the same name already exists");
+})
     .then((user) => {
       const token = signToken(user.id);
       response.status(201).send({ user, token });
@@ -64,6 +70,7 @@ function createUser(request, response, next) {
       next(error);
     });
 }
+
 
 function logoutUser(request, response, next) {
   const token = request.headers.authorization?.split(" ")[1];
