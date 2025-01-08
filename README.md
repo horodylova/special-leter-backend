@@ -2,4 +2,6 @@
 
 npm run setup-dbs
 npm run seed
+
+npm start
 npm run dev

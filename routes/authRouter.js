@@ -5,7 +5,7 @@ const {getUser, createUser, logoutUser} = require ('../controllers/userControlle
 const router = express.Router()
 
 router.post("/register", createUser);
-router.get("/logout", logoutUser);
+router.post("/logout", logoutUser);
 
 router.get('/login', getUser);
 
