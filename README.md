@@ -23,3 +23,8 @@ GET http://localhost:3001/api/auth/login
 POST http://localhost:3001/api/auth/register
 POST http://localhost:3001/api/auth/logout
 Authorization: Bearer your_jwt_token
+
+**with port**
+
+lsof -i :3001
+kill -9 
