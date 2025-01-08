@@ -1,6 +1,5 @@
 const db = require("../db/connection");
 const HttpError = require("../helpers/HttpError");
-const checkUserExists = require("./utils/checkUserExists")
  
 
 function getUsersModel() {

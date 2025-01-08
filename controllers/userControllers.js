@@ -54,7 +54,7 @@ function createUser(request, response, next) {
 
   checkUserExists(username)  
   .then((userExists) => {
-    console.log("User exists?", userExists);  // Логируем результат проверки
+    console.log("User exists?", userExists);   
     if (!userExists) {
         return hashPassword(password).then((hashedPassword) => {
             return postUserModel(username, hashedPassword);

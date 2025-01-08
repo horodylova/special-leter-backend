@@ -7,7 +7,7 @@
     "test": "jest",
     "dev": "nodemon server.js",
     "seed": "node db/seeds/seed.js",
-    "setup-dbs": "psql -U postgres -d postgres -f ./db/setup.sql", 
+    "setup-dbs": "psql -U postgres -d postgres -f ./db/setup.sql",
     "start": "psql -U postgres -d special_letter"
   },
   "keywords": [],

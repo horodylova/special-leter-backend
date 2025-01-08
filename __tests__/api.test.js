@@ -58,7 +58,7 @@ describe("GET /api/auth", () => {
 
     const userSvitlana = {
       username: "Svitlana",
-      password: "1111111"
+
     };
 
     return request(app)
@@ -72,7 +72,7 @@ describe("GET /api/auth", () => {
   test("returns 200 if the user exists", () => {
     const userAlice = {
       username: "Alice Johnson",
-      password: "1111111"
+    
     };
 
     return request(app)
