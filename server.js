@@ -3,6 +3,7 @@ const cors = require('cors');
 const pool = require ('./db/connection.js');
 
 const authRouter = require("./routes/authRouter.js")
+const lettersRouter = require("./routes/lettersRouter.js")
  
 const app = express();
 
@@ -14,6 +15,7 @@ app.get('/api', (req, res) => {
 });
 
 app.use('/api/auth', authRouter)
+app.use('/api/letters', lettersRouter)
   
 app.get('/api/test-db', async (req, res) => {
   try {
