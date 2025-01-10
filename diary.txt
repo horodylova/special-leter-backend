@@ -43,3 +43,10 @@ Write simple error handlers.
 
 Yesterday and today, I updated database models to include password hashing, implemented secure user creation and login functionality with bcrypt, integrated JWT token generation for authentication, and refined error handling in controllers for better clarity and reliability.
 
+10/01 
+
+I wrote several tests for the database, including verifying if the users and letters tables were seeded correctly, and checking relationships between them. Initially, the main issue was with the user_id mapping in the letters table, which led to inconsistent associations between users and their letters.
+
+I resolved this by ensuring consistent seeding with fixed user_id values and proper mapping using username during the seed process. I also wrote tests to retrieve all letters for a specific user and to fetch letters that could be opened in 2023. By refining the database queries and aligning the test expectations with the actual data, I ensured the relationships between the tables were functioning as intended.
+
+I also learned that a port is not required for testing with supertest. Instead of running the server on a specific port using app.listen, I used the express app object directly in the tests. This approach avoids conflicts, such as the "address already in use" error, and ensures the tests run smoothly without relying on an active server. 

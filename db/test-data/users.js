@@ -2,26 +2,26 @@ module.exports = [
   {
       id: 1,
       username: 'John Doe',
-      password: 'password123'
+      password_hash: 'password123'
   },
   {
       id: 2,
       username: 'Jane Smith',
-      password: '123456'
+      password_hash: '123456'
   },
   {
       id: 3,
       username: 'Alice Johnson',
-      password: 'alicepass'
+      password_hash: 'alicepass'
   },
   {
       id: 4,
       username: 'Bob Brown',
-      password: 'bobsecure'
+      password_hash: 'bobsecure'
   },
   {
       id: 5,
       username: 'Emily White',
-      password: 'emilypass'
+      password_hash: 'emilypass'
   }
 ];

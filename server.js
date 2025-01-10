@@ -5,7 +5,6 @@ const pool = require ('./db/connection.js');
 const authRouter = require("./routes/authRouter.js")
  
 const app = express();
-const PORT = 3001;
 
 app.use(cors());
 app.use(express.json());
@@ -30,7 +29,12 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message });
 });
 
- 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+module.exports = app;
+
+ if (require.main === module) {
+
+  const PORT = 3001;
+  app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+  });
+}
