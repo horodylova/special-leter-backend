@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "start": " node server.js",
-    "seed-prod": "NODE_ENV=production npm run seed",
+    "seed-prod": "NODE_ENV=production node ./db/seeds/seed.js",
     "dev": "nodemon server.js",
     "seed": "node db/seeds/seed.js",
     "setup-dbs": "psql -U postgres -d postgres -f ./db/setup.sql",
