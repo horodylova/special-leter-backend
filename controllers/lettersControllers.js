@@ -30,7 +30,11 @@ function postNewLetter (request, response, next) {
 const {created_at, opened_at, letter_text} = request.body;
 const {user_id} = request.user;
 
- postNewLetterModel({user_id, created_at, opened_at, letter_text})
+if (!letter_text) {
+    throw HttpError(400, "Letter text is required");
+}
+
+ postNewLetterModel(user_id, created_at, opened_at, letter_text)
 .then((newLetter) => {
     response.status(201).send(newLetter)
 })
@@ -45,7 +49,7 @@ function deleteLetterById (request, response, next) {
 
     deleteLetterModel(letter_id, user_id)
     .then(() => {
-        response.status(204).send()
+        response.status(204).send({msg: "Letter deleted"})
     })
     .catch(next)
 }

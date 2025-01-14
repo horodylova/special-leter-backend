@@ -14,7 +14,7 @@ function getUsersModel() {
 
 function getUserModel(username) {
     return db
-    .query(`SELECT username, password_hash FROM users WHERE users.username=$1`, [username])
+    .query(`SELECT id, username, password_hash FROM users WHERE users.username=$1`, [username])
     .then(({rows}) => {
         if (rows.length === 0) {
             throw new HttpError(404, "User not found");

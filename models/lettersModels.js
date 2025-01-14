@@ -9,22 +9,19 @@ function  fetchAllLetters (user_id) {
         result.rows
     )
 }
-function postNewLetterModel (created_at, opened_at, letter_text) {
- return db.query(
-    `INSERT INTO letters
-    (created_at, opened_at, letter_text)
-    VALUES ($1, $2, $3)
-    RETURNING *`, 
-    [created_at, opened_at, letter_text]
- )  .then((result) => {
-    return result.rows[0]
- })
+function postNewLetterModel(user_id, created_at, opened_at, letter_text) {
+    return db.query(
+        `INSERT INTO letters (user_id, created_at, opened_at, letter_text)
+         VALUES ($1, $2, $3, $4)
+         RETURNING *;`,
+        [user_id, created_at || new Date(), opened_at || null, letter_text]
+    ).then((result) => result.rows[0]);
 }
 
 function fetchLetterById (letter_id) {
     return db.query(
         `SELECT * FROM letters 
-        WHERE letters.letter_id = $1`, 
+        WHERE letters.id = $1`, 
         [letter_id]
     )
 }
