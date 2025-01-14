@@ -1,16 +1,53 @@
 const HttpError = require ("../helpers/HttpError.js")
-const checkLetterExists = require("../models/utils/checkLetterExists")
-
-
+ 
+const {postNewLetterModel,  fetchAllLetters, fetchLetterById, deleteLetterModel} = require("../models/lettersModels.js")
+ 
 function getAllLetters (request, response, next) {
-
+    const {user_id} = request.user;
+    fetchAllLetters (user_id)
+    .then((letters) => {
+        response.status(200).send({letters})
+    })
+    .catch(next)
 }
 function getLetterById (request, response, next) {
+ const {letter_id} = request.params;
+ const {user_id} = request.user;
 
+ if(Number.isInteger) {
+    fetchLetterById(letter_id, user_id)
+    .then((letter) => {
+        response.status(200).send({letter})
+    })
+    .catch(next)
+ }
+ else{
+    throw HttpError(404, "No letters found");
+ }
 }
 
 function postNewLetter (request, response, next) {
+const {created_at, opened_at, letter_text} = request.body;
+const {user_id} = request.user;
 
+ postNewLetterModel({user_id, created_at, opened_at, letter_text})
+.then((newLetter) => {
+    response.status(201).send(newLetter)
+})
+.catch((error) => {
+    next(error)
+})
 }
 
-module.exports = {getAllLetters, getLetterById, postNewLetter}
+function deleteLetterById (request, response, next) {
+    const {letter_id} = request.params;
+    const {user_id} = request.user;
+
+    deleteLetterModel(letter_id, user_id)
+    .then(() => {
+        response.status(204).send()
+    })
+    .catch(next)
+}
+
+module.exports = {getAllLetters, getLetterById, postNewLetter, deleteLetterById};
