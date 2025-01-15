@@ -8,7 +8,7 @@ function checkUserExists (username) {
         return result.rows.length > 0;   
     })
     .catch((err) => {
-        throw new HttpError(500, "Database error during user check");
+        throw HttpError(500, "Database error during user check");
     });
 }
 
