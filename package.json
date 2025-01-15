@@ -10,7 +10,8 @@
     "dev": "nodemon server.js",
     "seed": "node db/seeds/seed.js",
     "setup-dbs": "psql -U postgres -d postgres -f ./db/setup.sql",
-    "start-db": "psql -U postgres -d special_letter"
+    "start-db": "psql -U postgres -d special_letter",
+    "test-dns": "node test-dns.js"
   },
   "keywords": [],
   "author": "",
