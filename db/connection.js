@@ -20,7 +20,8 @@ if (ENV === 'production') {
   config.max = 2; 
   config.ssl = {
     rejectUnauthorized: false, 
-  };
+  },
+  config.family = 4
 }
 
 const pool = new Pool(config);
