@@ -49,7 +49,7 @@ function createUser(request, response, next) {
   const { username, password } = request.body;
 
   if (!password) {
-      throw new Error("Password is required");
+    throw HttpError(404, "Password is required");
   }
 
   checkUserExists(username)  
