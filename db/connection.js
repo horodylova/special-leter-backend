@@ -33,23 +33,10 @@ const config = {
   ssl: {
     rejectUnauthorized: false,  
   },
-  family: 4,  
 };
-
-console.log("Running in production mode with direct database URL");
 
 const pool = new Pool(config);
 
-(async () => {
-  try {
-    const res = await pool.query("SELECT NOW()");
-    console.log("Connected to database:", res.rows[0]);
-  } catch (error) {
-    console.error("Error connecting to database:", error.message);
-  } finally {
-    pool.end();
-  }
-})();
-
 module.exports = pool;
+
 
