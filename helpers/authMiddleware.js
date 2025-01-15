@@ -13,7 +13,7 @@ function authMiddleware(request, response, next) {
     const token = request.headers.authorization?.split(" ")[1];
 
     if (!token) {
-        return next(new HttpError(401, "Authorization token is missing"));
+        return next(HttpError(401, "Authorization token is missing"));
     }
 
     try {
@@ -22,7 +22,7 @@ function authMiddleware(request, response, next) {
        
         next();
     } catch (error) {
-        next(new HttpError(401, "Invalid token"));
+        next(HttpError(401, "Invalid token"));
     }
 }
 
