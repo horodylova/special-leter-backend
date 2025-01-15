@@ -64,7 +64,7 @@ function createUser(request, response, next) {
           throw HttpError(409, "A user with the same name already exists");
       })
       .then((user) => {
-          const token = signToken(user.id); // Создаём JWT токен
+          const token = signToken(user.id);  
           response.status(201).send({ user, token });
       })
       .catch((error) => {
