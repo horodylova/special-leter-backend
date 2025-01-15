@@ -37,6 +37,20 @@ app.get('/api/test-db', async (req, res) => {
   }
 });
 
+const dns = require("dns");
+
+app.get('/api/test-dns', (req, res) => {
+  dns.lookup('db.zdyhayhguzfcjuilwnua.supabase.co', (err, address, family) => {
+    if (err) {
+      console.error("DNS Lookup Error:", err.message);
+      res.status(500).json({ message: "DNS Lookup Failed", error: err.message });
+    } else {
+      console.log("Supabase Host Address:", address, "Family:", family);
+      res.status(200).json({ address, family });
+    }
+  });
+});
+
 
 app.use((err, req, res, next) => {
   const { status = 500, message = "Server error" } = err;

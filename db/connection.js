@@ -33,6 +33,7 @@ const config = {
   ssl: {
     rejectUnauthorized: false,  
   },
+  family: 4,
 };
 
 const pool = new Pool(config);
