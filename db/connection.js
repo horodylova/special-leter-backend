@@ -52,6 +52,7 @@ if (ENV === 'production') {
   config.ssl = {
     rejectUnauthorized: false,
   };
+  config.family = 4;  
 }
 
 console.log(`Running in ${ENV} mode`);
