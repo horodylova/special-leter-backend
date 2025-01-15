@@ -23,14 +23,6 @@ app.use((req, res, next) => {
 app.use('/api/auth', authRouter)
 app.use('/api/letters', lettersRouter)
   
-app.get('/api/test-db', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT NOW()');  
-    res.status(200).json({ message: 'Database connection successful!', time: result.rows[0] });
-  } catch (error) {
-    res.status(500).json({ message: 'Database connection failed!', error: error.message });
-  }
-});
 
 //some tests for Render
 

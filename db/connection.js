@@ -25,35 +25,18 @@
 
 // const pool = new Pool(config);
 // module.exports = pool;
-const pg = require('pg');
-const dotenv = require('dotenv');
-const path = require('path');
-const { Pool } = pg;
 
-const ENV = process.env.NODE_ENV || 'development';
-
-console.log(`Loading environment from: ${path.resolve(__dirname, `../.env.${ENV}`)}`);
-
-dotenv.config({
-  path: path.resolve(__dirname, `../.env.${ENV}`),
-});
-
-if (!process.env.DATABASE_URL) {
-  console.error("DATABASE_URL not set in environment variables.");
-  throw new Error('DATABASE_URL not set');
-}
+const { Pool } = require("pg");
 
 const config = {
-  connectionString: process.env.DATABASE_URL,
+  connectionString: "postgresql://postgres:svetlana123456SVETLANA123456@db.zdyhayhguzfcjuilwnua.supabase.co:5432/postgres",
   ssl: {
     rejectUnauthorized: false,  
   },
-  host: 'db.zdyhayhguzfcjuilwnua.supabase.co',
-  port: 5432,
   family: 4,  
 };
 
-console.log(`Running in ${ENV} mode`);
+console.log("Running in production mode with direct database URL");
 
 const pool = new Pool(config);
 
@@ -69,3 +52,4 @@ const pool = new Pool(config);
 })();
 
 module.exports = pool;
+
