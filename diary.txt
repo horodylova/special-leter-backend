@@ -59,3 +59,19 @@ I worked on implementing token-based authentication, including a middleware to e
 Additionally, I developed the logic for handling user letters, including creating, retrieving, and managing them. The main issue I faced was that the token did not initially include the user ID, which caused problems with associating letters with the correct user. 
 
 After debugging, I resolved this by ensuring the user ID is included when generating the token.
+
+15/01
+
+I recently faced a challenging issue while deploying my application on Render and connecting it to Supabase as the database. At first, everything seemed fine until I realized that my application on Render couldn't establish a connection to Supabase. The logs indicated an ENETUNREACH error, specifically pointing out that Render was trying to connect to an IPv6 address provided by Supabase.
+
+This conflict arose because Render's networking setup seemed to have trouble handling the IPv6 address Supabase returned (Family: 6). Despite configuring the database connection to force IPv4 (family: 4), the issue persisted because Supabase’s default connection method still prioritized IPv6.
+
+After digging deeper into Supabase’s documentation, I found the solution: Transaction Pooler. Unlike the default database connection, the Transaction Pooler resolves to an IPv4 address, ensuring compatibility with Render's networking. Here's how I fixed it:
+
+I updated my Supabase connection string to use the Transaction Pooler.  
+
+I adjusted my database connection configuration in the code to match the new connection string.
+
+After redeploying my application on Render, everything worked perfectly. The database connection was established successfully, and all routes began functioning as expected.
+
+If you’re using Render with Supabase and facing similar issues, using the Transaction Pooler is the way to go for seamless connectivity.
