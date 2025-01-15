@@ -49,26 +49,28 @@ function createUser(request, response, next) {
   const { username, password } = request.body;
 
   if (!password) {
-    throw HttpError(404, "Password is required");
+      return next(HttpError(400, "Password is required"));  
   }
 
-  checkUserExists(username)  
-  .then((userExists) => {
-    console.log("User exists?", userExists);   
-    if (!userExists) {
-        return hashPassword(password).then((hashedPassword) => {
-            return postUserModel(username, hashedPassword);
-        });
-    }
-    throw HttpError(409, "A user with the same name already exists");
-})
-    .then((user) => {
-      const token = signToken(user.id);
-      response.status(201).send({ user, token });
-    })
-    .catch((error) => {
-      next(error);
-    });
+  checkUserExists(username)
+      .then((userExists) => {
+          console.log("User exists?", userExists);
+          if (!userExists) {
+               
+              return hashPassword(password)
+                  .then((hashedPassword) => postUserModel(username, hashedPassword));
+          }
+          
+          throw HttpError(409, "A user with the same name already exists");
+      })
+      .then((user) => {
+          const token = signToken(user.id); // Создаём JWT токен
+          response.status(201).send({ user, token });
+      })
+      .catch((error) => {
+          console.error("Error in createUser:", error.message);  
+          next(error);  
+      });
 }
 
 
