@@ -48,29 +48,43 @@ function getUser(request, response, next) {
 function createUser(request, response, next) {
   const { username, password } = request.body;
 
+  console.log("[createUser] Incoming request body:", { username, passwordExists: !!password });
+
   if (!password) {
-      return next(HttpError(400, "Password is required"));  
+    console.warn("[createUser] Missing password in request");
+    return next(HttpError(400, "Password is required"));
   }
 
+  console.log("[createUser] Checking if user exists:", username);
+
   checkUserExists(username)
-      .then((userExists) => {
-          console.log("User exists?", userExists);
-          if (!userExists) {
-               
-              return hashPassword(password)
-                  .then((hashedPassword) => postUserModel(username, hashedPassword));
-          }
-          
-          throw HttpError(409, "A user with the same name already exists");
-      })
-      .then((user) => {
-          const token = signToken(user.id);  
-          response.status(201).send({ user, token });
-      })
-      .catch((error) => {
-          console.error("Error in createUser:", error.message);  
-          next(error);  
-      });
+    .then((userExists) => {
+      console.log("[createUser] User exists check result:", userExists);
+
+      if (!userExists) {
+        console.log("[createUser] User does not exist, hashing password");
+        
+        return hashPassword(password).then((hashedPassword) => {
+          console.log("[createUser] Password hashed, creating user");
+          return postUserModel(username, hashedPassword);
+        });
+      }
+
+      console.warn("[createUser] User already exists:", username);
+      throw HttpError(409, "A user with the same name already exists");
+    })
+    .then((user) => {
+      console.log("[createUser] User created successfully:", user);
+      
+      const token = signToken(user.id);
+      console.log("[createUser] Token generated for user:", token);
+      
+      response.status(201).send({ user, token });
+    })
+    .catch((error) => {
+      console.error("[createUser] Error occurred:", error.message);
+      next(error);
+    });
 }
 
 
