@@ -45,15 +45,13 @@ if (!process.env.DATABASE_URL) {
 
 const config = {
   connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,  
+  },
+  host: 'db.zdyhayhguzfcjuilwnua.supabase.co',
+  port: 5432,
+  family: 4,  
 };
-
-if (ENV === 'production') {
-  config.max = 2;
-  config.ssl = {
-    rejectUnauthorized: false,
-  };
-  config.family = 4;  
-}
 
 console.log(`Running in ${ENV} mode`);
 
