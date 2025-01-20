@@ -1,0 +1,479 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+      "title": "Special Letter API docs - OpenAPI 3.0",
+      "description": "API for managing user letters, including creation, retrieval, and deletion.\n\nSome useful links:\n- [Special Letter Frontend](https://github.com/horodylova/special-letter)\n- [Contact the developer](https://www.linkedin.com/in/svitlana-horodylova/)",
+      "version": "1.0.11"
+    },
+    "servers": [
+      {
+        "url": "https://special-leter-backend.onrender.com"
+      }
+    ],
+    "tags": [
+      {
+        "name": "letters",
+        "description": "Everything about your Letters"
+      },
+      {
+        "name": "user",
+        "description": "Operations about user"
+      }
+    ],
+    "paths": {
+      "/api/letters": {
+        "post": {
+          "tags": [
+            "letters"
+          ],
+          "summary": "Create a new letter",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "opened_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "nullable": true
+                    },
+                    "letter_text": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "created_at",
+                    "letter_text"
+                  ]
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Letter successfully created",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "user_id": {
+                        "type": "integer"
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "opened_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                      },
+                      "letter_text": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/letters/{letter_id}": {
+        "get": {
+          "tags": [
+            "letters"
+          ],
+          "summary": "Get a specific letter by ID",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "letter_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Letter details",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "user_id": {
+                        "type": "integer"
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "opened_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                      },
+                      "letter_text": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Letter not found"
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "letters"
+          ],
+          "summary": "Delete a specific letter by ID",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "letter_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Letter successfully deleted"
+            },
+            "404": {
+              "description": "Letter not found"
+            }
+          }
+        }
+      },
+      "/api/auth/register": {
+        "post": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Create a new user",
+          "description": "This can only be done by a logged-in user. The user will be created with a hashed password.",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "username": {
+                      "type": "string",
+                      "example": "johnDoe"
+                    },
+                    "password": {
+                      "type": "string",
+                      "example": "12345"
+                    }
+                  },
+                  "required": [
+                    "username",
+                    "password"
+                  ]
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "User successfully created",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Missing password or invalid input"
+            },
+            "409": {
+              "description": "A user with the same name already exists"
+            }
+          }
+        }
+      },
+      "/api/auth/login": {
+        "get": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Log the user into the system",
+          "description": "Logs the user in with a username and password. If credentials are valid, a JWT token is returned.",
+          "parameters": [
+            {
+              "name": "username",
+              "in": "query",
+              "description": "The username for login",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "password",
+              "in": "query",
+              "description": "The password for login in clear text",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful login with JWT token",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "user": {
+                        "$ref": "#/components/schemas/User"
+                      },
+                      "token": {
+                        "type": "string",
+                        "example": "jwt_token_example"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid username or password supplied"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      },
+      "/api/user/logout": {
+        "get": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Log the user out of the system",
+          "description": "Logs the user out by invalidating their JWT token.",
+          "responses": {
+            "200": {
+              "description": "Successful logout"
+            },
+            "400": {
+              "description": "Invalid session or token"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      },
+      "schemas": {
+        "User": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "format": "int64",
+              "example": 10
+            },
+            "username": {
+              "type": "string",
+              "example": "theUser"
+            },
+            "firstName": {
+              "type": "string",
+              "example": "John"
+            },
+            "lastName": {
+              "type": "string",
+              "example": "James"
+            },
+            "email": {
+              "type": "string",
+              "example": "john@email.com"
+            },
+            "password": {
+              "type": "string",
+              "example": "12345"
+            },
+            "phone": {
+              "type": "string",
+              "example": "12345"
+            },
+            "userStatus": {
+              "type": "integer",
+              "description": "User Status",
+              "format": "int32",
+              "example": 1
+            }
+          },
+          "xml": {
+            "name": "user"
+          }
+        },
+        "AuthToken": {
+          "type": "object",
+          "properties": {
+            "token": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEwLCJpYXQiOjE2NzEwMTYwNTgsImV4cCI6MTY3MTAwODg1OH0.NhXOGeFw0SHYoQZ7b5h9bGLu9c2tI_MHZmk8xOgEOLc",
+              "description": "JWT token to access protected endpoints"
+            }
+          }
+        },
+        "Error": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "integer",
+              "description": "Error code"
+            },
+            "message": {
+              "type": "string",
+              "description": "Error message"
+            }
+          }
+        },
+        "PasswordReset": {
+          "type": "object",
+          "properties": {
+            "newPassword": {
+              "type": "string",
+              "description": "The new password"
+            },
+            "confirmPassword": {
+              "type": "string",
+              "description": "Confirm the new password"
+            }
+          }
+        }
+      },
+      "requestBodies": {
+        "User": {
+          "description": "User object that needs to be created or updated",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "PasswordResetRequest": {
+          "description": "Request to reset password",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordReset"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordReset"
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "UserNotFound": {
+          "description": "User not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "InvalidCredentials": {
+          "description": "Invalid credentials provided",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "UserCreated": {
+          "description": "User successfully created",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "Unauthorized": {
+          "description": "Unauthorized request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
