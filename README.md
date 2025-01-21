@@ -28,3 +28,6 @@ Authorization: Bearer your_jwt_token
 
 lsof -i :3001
 kill -9 
+
+
+swagger https://app.swaggerhub.com/apis/SvitlanaHorodylova/Special_Letter/1.0.0 
