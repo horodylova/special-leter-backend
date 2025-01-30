@@ -233,7 +233,7 @@
         }
       },
       "/api/auth/login": {
-        "get": {
+        "post": {
           "tags": [
             "user"
           ],
