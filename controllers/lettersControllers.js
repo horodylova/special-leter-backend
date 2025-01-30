@@ -4,6 +4,7 @@ const {postNewLetterModel,  fetchAllLetters, fetchLetterById, deleteLetterModel}
  
 function getAllLetters (request, response, next) {
     const {user_id} = request.user;
+ console.log(request.user)
     fetchAllLetters (user_id)
     .then((letters) => {
         response.status(200).send({letters})
