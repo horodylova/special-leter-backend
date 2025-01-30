@@ -8,7 +8,7 @@ function getAllLetters (request, response, next) {
 
     fetchAllLetters (user_id)
     .then((letters) => {
-        response.status(200).send({letters})
+         response.status(200).send({ letters: letters || [] });
     })
     .catch(next)
 }
