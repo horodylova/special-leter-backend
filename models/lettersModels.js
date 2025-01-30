@@ -6,7 +6,7 @@ function  fetchAllLetters (user_id) {
         `SELECT * FROM letters WHERE user_id = $1`,
         [user_id]
     ).then((result) => 
-        result.rows
+        result.rows || []
     )
 }
 function postNewLetterModel(user_id, created_at, opened_at, letter_text) {
