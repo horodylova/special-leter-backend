@@ -1,5 +1,4 @@
 const bcrypt = require("bcrypt");
-
 const {
   getUsersModel,
   getUserModel,
@@ -7,7 +6,6 @@ const {
 } = require("../models/userModels");
 const checkUserExists = require("../models/utils/checkUserExists");
 const HttpError = require("../helpers/HttpError.js");
-
 const { signToken, checkToken } = require("../helpers/JWTHandling.js");
 const hashPassword = require("../helpers/hashPasswords.js");
 
@@ -26,70 +24,78 @@ function getUsers(request, response, next) {
 
 function getUser(request, response, next) {
   const { username, password } = request.body;
+  
+  if (!username || !password) {
+    return next(HttpError(400, "Username and password are required"));
+  }
 
-  getUserModel(username, password)
+  getUserModel(username)
     .then((user) => {
       if (!user) {
-        throw HttpError(404, "User not found");
+        throw HttpError(401, "Invalid username or password");
       }
-      return bcrypt.compare(password, user.password_hash).then((match) => {
-        if (!match) {
-          throw HttpError(401, "Invalid credentials");
-        }
-        const token = signToken(user.id);
-        response.status(200).send({ user, token });
-      });
+      return bcrypt.compare(password, user.password_hash)
+        .then((match) => {
+          if (!match) {
+            throw HttpError(401, "Invalid username or password");
+          }
+          const token = signToken(user.id);
+          const userData = {
+            id: user.id,
+            username: user.username
+          };
+          response.status(200).send({ user: userData, token });
+        });
     })
     .catch((error) => {
+      // Если это не HttpError, преобразуем в 500
+      if (!error.status) {
+        error = HttpError(500, "Internal server error");
+      }
       next(error);
     });
 }
 
 function createUser(request, response, next) {
   const { username, password } = request.body;
-
-  console.log("[createUser] Incoming request body:", { username, passwordExists: !!password });
-
-  if (!password) {
-    console.warn("[createUser] Missing password in request");
-    return next(HttpError(400, "Password is required"));
+  
+  if (!username || !password) {
+    return next(HttpError(400, "Username and password are required"));
   }
-
-  console.log("[createUser] Checking if user exists:", username);
 
   checkUserExists(username)
     .then((userExists) => {
-      console.log("[createUser] User exists check result:", userExists);
-
-      if (!userExists) {
-        console.log("[createUser] User does not exist, hashing password");
-        
-        return hashPassword(password).then((hashedPassword) => {
-          console.log("[createUser] Password hashed, creating user");
-          return postUserModel(username, hashedPassword);
-        });
+      if (userExists) {
+        throw HttpError(409, "A user with the same name already exists");
       }
-
-      console.warn("[createUser] User already exists:", username);
-      throw HttpError(409, "A user with the same name already exists");
+      return hashPassword(password);
+    })
+    .then((hashedPassword) => {
+      return postUserModel(username, hashedPassword);
     })
     .then((user) => {
-      console.log("[createUser] User created successfully:", user);
-      
       const token = signToken(user.id);
-      console.log("[createUser] Token generated for user:", token);
-      
-      response.status(201).send({ user, token });
+      const userData = {
+        id: user.id,
+        username: user.username
+      };
+      response.status(201).send({ user: userData, token });
     })
     .catch((error) => {
-      console.error("[createUser] Error occurred:", error.message);
+      // Если это не HttpError, преобразуем в 500
+      if (!error.status) {
+        error = HttpError(500, "Internal server error");
+      }
       next(error);
     });
 }
 
-
 function logoutUser(request, response, next) {
   const token = request.headers.authorization?.split(" ")[1];
+  
+  if (!token) {
+    return next(HttpError(401, "No token provided"));
+  }
 
   try {
     checkToken(token);
