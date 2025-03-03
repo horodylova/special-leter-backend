@@ -14,35 +14,31 @@ Special Letter uses encryption to ensure your messages remain private until thei
 
 1. **Encryption**: When a user submits a letter, the backend encrypts the content using a 32-character key stored securely in environment variables.
    ```javascript
-   // Simplified encryption example
+   
    const crypto = require('crypto');
    
-   function encryptText(text, key) {
-     const algorithm = 'aes-256-ctr';
+function encryptText(text) {
+  try {
      const iv = crypto.randomBytes(16);
-     const cipher = crypto.createCipheriv(algorithm, key, iv);
-     let encrypted = cipher.update(text, 'utf8', 'hex');
-     encrypted += cipher.final('hex');
-     return {
-       iv: iv.toString('hex'),
-       content: encrypted
-     };
-   }
+     const cipher = crypto.createCipheriv(
+      ENCRYPTION_ALGORITHM, 
+      Buffer.from(ENCRYPTION_KEY.padEnd(32).slice(0, 32)), 
+      iv
+    );
+    
+    let encrypted = cipher.update(text, 'utf8', 'hex');
+    encrypted += cipher.final('hex');
+    
+    
+    return `${iv.toString('hex')}:${encrypted}`;
+  } catch (error) {
+    console.error('Encryption error:', error);
+    throw new Error('Failed to encrypt letter text');
+  }
+}
    ```
 
 2. **Storage**: The encrypted text and initialization vector (IV) are stored in the database, keeping the content secure even if someone gains database access.
-
-3. **Decryption**: When the scheduled date arrives, the system can decrypt the letter using the same key:
-   ```javascript
-   function decryptText(hash, key) {
-     const algorithm = 'aes-256-ctr';
-     const iv = Buffer.from(hash.iv, 'hex');
-     const decipher = crypto.createDecipheriv(algorithm, key, iv);
-     let decrypted = decipher.update(hash.content, 'hex', 'utf8');
-     decrypted += decipher.final('utf8');
-     return decrypted;
-   }
-   ```
 
 This ensures that letters remain private and can only be read when the specified date arrives.
 
