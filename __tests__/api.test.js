@@ -13,7 +13,6 @@ afterAll(() => {
   return pool.end();
 });
 
-//tests for database
 
 describe("Database tests", () => {
   test("Users table is seeded correctly", async () => {
@@ -123,7 +122,6 @@ describe("Database tests", () => {
   });
   
 });
-//tests for users
 
 describe("GET /auth", () => {
   test("returns 200 status with array of users", () => {

@@ -1,9 +1,0 @@
- docker-compose down
-docker-compose up --build
-
----------
-curl http://localhost:3000/api/test-db
-------
-docker exec -it special_letter_backend sh
-npm run test
-
