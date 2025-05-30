@@ -11,7 +11,8 @@
     "seed": "node db/seeds/seed.js",
     "setup-dbs": "psql -U postgres -d postgres -f ./db/setup.sql",
     "start-db": "psql -U postgres -d special_letter",
-    "test-dns": "node test-dns.js"
+    "test-dns": "node test-dns.js",
+    "railway-init-db-schema": "NODE_ENV=production node ./db/run-setup-sql.js"
   },
   "keywords": [],
   "author": "",
