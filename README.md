@@ -1,5 +1,4 @@
-# Special Letter - Backend Updated 31/05/2025
-
+# Special Letter - Backend 
 A website for saving letters to your future self. This is its backend.
 
 You write a letter and set a date when you'd like to read it—whether in 5 or 10 years. Until then, the letter cannot be opened or deleted. The system will unlock it on the chosen date.
